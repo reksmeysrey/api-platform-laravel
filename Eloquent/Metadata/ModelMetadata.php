@@ -197,7 +197,11 @@ final class ModelMetadata
                     ->contains(fn ($relationMethod) => str_contains($code, '$this->'.$relationMethod.'('));
             })
             ->map(function (\ReflectionMethod $method) use ($model) {
-                $relation = $method->invoke($model);
+                try {
+                    $relation = $method->invoke($model);
+                }catch (\Exception $e){
+                    return null;
+                }
 
                 if (!$relation instanceof Relation) {
                     return null;
